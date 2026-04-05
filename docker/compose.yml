@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: cartio-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cartio
+      POSTGRES_USER: cartio
+      POSTGRES_PASSWORD: cartio
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  api:
+    build:
+      context: ../backend
+    container_name: cartio-api
+    env_file:
+      - ../backend/.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
